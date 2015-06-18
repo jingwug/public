@@ -1,0 +1,112 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Author: lideqiang
+# Description:       starts the PHP FastCGI Process Manager daemon
+### END INIT INFO
+
+prefix=/usr/local/nginx
+exec_prefix=${prefix}
+
+nginx_BIN=${exec_prefix}/sbin/nginx
+nginx_PID=${prefix}/nginx.pid
+
+wait_for_pid () {
+	try=0
+
+	while test $try -lt 35 ; do
+
+		case "$1" in
+			'created')
+			if [ -f "$2" ] ; then
+				try=''
+				break
+			fi
+			;;
+
+			'removed')
+			if [ ! -f "$2" ] ; then
+				try=''
+				break
+			fi
+			;;
+		esac
+
+		echo -n .
+		try=`expr $try + 1`
+		sleep 1
+
+	done
+
+}
+
+case "$1" in
+	start)
+		if [ -r $nginx_PID ]; then
+			echo  "nginx is running... ";
+			exit 1
+		fi
+
+		$nginx_BIN
+
+		if [ "$?" != 0 ] ; then
+			echo "Start failed. "
+			exit 1
+		fi
+
+		wait_for_pid created $nginx_PID
+
+		if [ -n "$try" ] ; then
+			echo "Start failed. "
+			exit 1
+		else
+			echo "Start done. "
+		fi
+	;;
+
+	stop)
+		if [ ! -r $nginx_PID ] ; then
+			echo "nginx is stoped. "
+			exit 1
+		fi
+
+		$nginx_BIN -s stop
+
+		wait_for_pid removed $nginx_PID
+
+		if [ -n "$try" ] ; then
+			echo "Stop failed. "
+			exit 1
+		else
+			echo "Stop done. "
+		fi
+	;;
+
+	restart)
+		$nginx_BIN -s reload
+
+		if [ -n "$try" ] ; then
+			echo "Reopen failed. "
+			exit 1
+		else
+			echo "Restart done. "
+		fi
+	;;
+
+	reopen)
+		$nginx_BIN -s reopen
+
+		if [ -n "$try" ] ; then
+			echo "Reopen failed. "
+			exit 1
+		else
+			echo "Reopen done. "
+		fi
+	;;
+
+	*)
+		echo "Usage: $0 {start|stop|restart|reopen}"
+		exit 1
+	;;
+
+esac

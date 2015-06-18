@@ -1,0 +1,86 @@
+负载均衡相关操作
+
+由系统实现读写分离、负载均衡、分库分表
+
+实现的子类包括 BalanceDb、BalanceMemcache、BalanceRedis
+
+DB配置文件示例
+$config = array(
+	'balances' => array(
+		'db' => array(
+			'write' => array(
+				'db' => array(
+					'adapter'     => 'Mysql',
+					'host'        => '121.40.31.143:65533',
+					'username'    => 'dbadmin',
+					'password'    => 'dbadmin!@#143',
+					'dbname'      => 'cm_yingshi2',
+					'charset'     => 'utf8',
+				),
+			),
+			'reads' => array(
+				'db_read' => array(
+					'adapter'     => 'Mysql',
+					'host'        => '121.40.31.143:65533',
+					'username'    => 'dbadmin',
+					'password'    => 'dbadmin!@#143',
+					'dbname'      => 'cm_yingshi2',
+					'charset'     => 'utf8',
+				)
+			)
+		),
+	),
+);
+
+//加载DB负载均衡
+BalanceDb::config($config->balances->toArray());
+
+//进行数据查询
+$sql = "select * from ys_user";		$rows = BalanceDb::instance('db')->fetchAll($sql);		var_dump($rows);	exit;
+
+
+
+
+
+
+
+Redis配置文件示例
+$config = array(
+	'balances' => array(
+		'main' => array(
+			'write' => array(
+				'main' => array(
+					'host'        => '121.40.31.143',
+					'port'        => '6379',
+					'auth'        => 'tester',
+				),
+			),
+			'reads' => array(
+				'redis0' => array(
+					'host'        => '121.40.31.143',
+					'port'        => '6379',
+					'auth'        => 'tester',
+				)
+			)
+		),
+	),
+);
+
+
+
+//Redis负载均衡
+BalanceRedis::config($config->baRedis->toArray());
+
+//缓存数据
+$result = BalanceRedis::instance('main')->set('tester', 'xxx', 60);
+
+//获取数据
+$result = BalanceRedis::instance('main')->get('tester');
+
+
+
+
+
+
+
+

@@ -1,0 +1,82 @@
+#For advice on how to change settings please see
+# http://dev.mysql.com/doc/refman/5.6/en/server-configuration-defaults.html
+
+[client]
+default-character-set=utf8
+port    = 65533
+socket  = /usr/local/mysql/mysql.sock
+
+[mysql]
+default-character-set=utf8
+
+[mysqld]
+user    = mysql
+port    = 65533
+socket  = /usr/local/mysql/mysql.sock
+basedir = /usr/local/mysql
+datadir = /data0/data_running/mysql
+pid-file = /usr/local/mysql/mysql.pid
+default-storage-engine = InnoDB
+# default-storage-engine = MyISAM
+max_connections = 1000
+wait_timeout = 30
+interactive_timeout = 600
+max_heap_table_size = 256M
+tmp_table_size = 512M
+
+# slow log
+slow_query_log = on
+slow-query-log-file = /data0/logs/mysql/mysql_slow.log
+long_query_time=2
+log-queries-not-using-indexes
+# error log
+log-error = /data0/logs/mysql/mysql_error.log
+#closed warning for --explicit_defaults_for_timestamp
+explicit_defaults_for_timestamp=true
+
+
+# Remove leading # and set to the amount of RAM for the most important data
+# cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
+# innodb_buffer_pool_size = 128M
+
+# Remove leading # to turn on a very important data integrity option: logging
+# changes to the binary log between backups.
+# log_bin
+
+# These are commonly set, remove the # and set as required.
+# basedir = .....
+# datadir = .....
+# port = .....
+# server_id = .....
+# socket = .....
+
+# Remove leading # to set options mainly useful for reporting servers.
+# The server defaults are faster for transactions and fast SELECTs.
+# Adjust sizes as needed, experiment to find the optimal values.
+# join_buffer_size = 128M
+# sort_buffer_size = 2M
+# read_rnd_buffer_size = 2M
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+
+[mysql.server]
+pid-file=/usr/local/mysql/mysqld.pid
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+# Remove the next comment character if you are not familiar with SQL
+# #safe-updates
+default-character-set=utf8
+
+[myisamchk]
+key_buffer_size = 20M
+sort_buffer_size = 20M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
+

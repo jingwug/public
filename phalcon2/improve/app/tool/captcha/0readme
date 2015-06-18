@@ -1,0 +1,13 @@
+应用示例：
+验证码，默认为图片验证码
+
+图片验证码：
+//生成验证码，同时返回操作ID及验证码	如：array('operateId' => , 'captcha' => '')
+$data = Captcha::install()->generate(10);		var_dump($captcha);	exit;	//生成验证码，有效期10稍
+$data = Captcha::install()->setWidth(200)->generate(60);		var_dump($captcha);	exit;	//图片宽200，有效期60秒
+
+//根据操作ID生成图片	
+$result = Captcha::install()->image($data['operateId']);
+
+//根据操作Id及验证码判断有效性
+$result = Captcha::install()->verify($data['operateId'], $data['captcha']);	var_dump($result);	exit;

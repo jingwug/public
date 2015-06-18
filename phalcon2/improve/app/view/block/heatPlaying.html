@@ -1,0 +1,27 @@
+		<div class="right_clum1">
+			<div class="film_title">
+				<h2>正在热播</h2>
+				<!-- <a target="_blank" href="#" class="more">更多></a> -->
+			</div>
+			<ul class="hot_play">
+				<?php $playingFilms = BFilmBlock::playing(1,5); ?>
+				<?php foreach($playingFilms as $film) { ?>
+				<li>
+					<div class="pic">
+                                            <a href="<?php echo TUrl::instance()->get('/film/detail/id/'.$film['film_id']); ?>"><img src="<?php echo TUrl::instance()->imageUp($film['image']);  ?>"/></a>
+						<i class="d3"><?php echo $film['formats']; ?></i>
+					</div>
+					<div class="txt">
+                                            <a class="title" href="<?php echo TUrl::instance()->get('/film/detail/id/'.$film['film_id']); ?>"><?php echo $film['name']; ?></a>
+						<p>导演：<?php echo $film['director']; ?></p>
+						<p>主演：<?php echo $film['actors']; ?></p>
+						<span class="len"><b><?php echo $film['cinemas']; ?>家</b>影院上映<b><?php echo $film['screen']; ?>场</b></span>
+					</div>
+					<div class="scores">
+						<em><b><?php echo $film['score']; ?></b>分</em>
+					</div>
+				</li>
+				<?php } ?>
+			</ul>
+		</div>
+

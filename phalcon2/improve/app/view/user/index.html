@@ -1,0 +1,99 @@
+<link href="<?php echo TUrl::instance()->css('center.css'); ?>" rel="stylesheet" type="text/css" />
+<!-- 主体内容开始 -->
+<div class="wrapper center_main">
+<?php $this->partial('user/left'); ?>
+
+<!-- 右侧开始 -->
+<div class="center_main_r">
+<div class="hr_20"></div>
+<div class="ct_r_tit">
+
+	<p style="float:right">订单状态</p>
+	<!--
+	<p>订单状态：<span class="org">已取消订单</span></p>
+	<p>订单状态：<span class="org">已取消订单</span></p>
+	<div class="ct_r_more"><a href="">返回</a></div>
+	-->
+</div>
+
+<!-- 中间板块开始 -->
+<div class="center_r_main">
+<?php foreach($user_order as $item) { ?>
+<div class="ct_ll">
+    <div class="c_r_main_l">
+        <a href="/film/detail/id/<?php echo $item['film_id']; ?>"><img src="<?php echo TUrl::instance()->imageUp($item['film']['image']); ?>" alt="<?php echo $item['film']['name']; ?>" width="250px" height="300px"/></a>
+    </div>
+    <div class="c_r_main_r">
+        <ul class="ui_big_ratings <?php echo $item['status'] == -1 ? 'ce_gray02' : '';?>">
+            <?php if($item['film_heat']['score']<1) { ?>
+            <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+            <?php } elseif($item['film_heat']['score']<2) { ?>
+            <li class="half"></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+            <?php } elseif($item['film_heat']['score']<3) { ?>
+            <li class="half"></li><li class="on"></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+            <?php } elseif($item['film_heat']['score']<4) { ?>
+            <li class="half"></li><li class="on"></li><li class="half"></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+            <?php } elseif($item['film_heat']['score']<5) { ?>
+            <li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li></li><li></li><li></li><li></li><li></li><li></li>
+            <?php } elseif($item['film_heat']['score']<6) {?>
+            <li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li></li><li></li><li></li><li></li><li></li>
+            <?php } elseif($item['film_heat']['score']<7) {?>
+            <li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li></li><li></li><li></li><li></li>
+            <?php } elseif($item['film_heat']['score']<8) {?>
+            <li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li></li><li></li><li></li>
+            <?php } elseif($item['film_heat']['score']<9) {?>
+            <li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li></li><li></li>
+            <?php } elseif($item['film_heat']['score']<10) {?>
+            <li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li></li>
+            <?php } else { ?>
+            <li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li><li class="half"></li><li class="on"></li>
+            <?php } ?>
+        </ul>
+        <div class="center_scro <?php echo $item['status']==-1 ? 'ce_gray ce_gray03' : ''; ?>">
+            <span><?php echo $item['film_heat']['score']; ?></span>分
+        </div>
+        <?php if($item['status']==-1) { ?>
+        <div class="centr_bt centr_bt_jywc ce_gray">已过期</div>
+        <?php } elseif($item['status']==0) { ?>
+        <div class="center_ljgp"><a href="<?php echo TUrl::instance()->get('/order/orderInfo/id/'.$item['id']); ?>" target="_blank">立即付款</a></div>
+        <?php } elseif($item['status']==1) { ?>
+        <div class="centr_bt centr_bt_jywc">已付款</div>
+        <?php } elseif($item['status']==2) { ?>
+        <div class="centr_bt centr_bt_jywc">已取票</div>
+        <?php } ?>
+        <ul class="cent_ct_m <?php echo $item['status']==-1 ? 'ce_gray' : ''; ?>">
+            <li>影片价格：<span class="ff6">¥ <?php echo $item['price_total']/100; ?></span><span style="color:#999">(单价¥ <?php echo $item['price_total']/(100*$item['num']); ?>)</span></li>
+            <li>订单编号：<span><?php echo $item['order_code']; ?></span></li>
+            <li>下单时间：<span><?php echo(date('Y-m-d H:i:s',$item['ctime']));?></span></li>
+            <li>取票手机：<span><?php echo $item['phone']; ?></span></li>
+        </ul>
+        <ul class="yp_cent <?php echo $item['status']==-1 ? 'ce_gray' : ''; ?>">
+            <li><span>影片：</span><?php echo $item['film_name']; ?></li>
+            <li><span>影院：</span><?php echo $item['cinema_name']; ?>（<?php echo $item['screen_name']; ?>）</li>
+            <li><span>时间：</span><?php echo $item['film_schedule']; ?></li>
+            <li><span>座位：</span><?php echo $item['note']; ?></li>
+        </ul>
+        <?php if($item['status']==0) { ?>
+        <div class="center_scor">
+            <b>请在12分24秒内完成付款</b>
+        </div>
+        <?php } ?>
+        <div class="centr_bt"><a href="javascript:void(0);">查看订单</a></div>
+        <div class="centr_bt centr_bt02" style="display: none;"><a href="javascript:void(0);">取消订单</a></div>
+    </div>
+    <div class="hr_30"></div>
+</div>
+<div class="clear"></div>
+<?php } ?>
+</div>
+<div class="hr_30"></div>
+<!-- pages -->
+<div class="movie_page">
+   <?php echo $page_html; ?>
+</div>
+
+
+</div>
+<div class="clear"></div>
+
+</div>
